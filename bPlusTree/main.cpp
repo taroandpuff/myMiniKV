@@ -1,12 +1,12 @@
 #include "BPlusTree.h"
-
+#include <string>
 
 void runFrame() {
     int k = 0;
     std::cout << "0，输入b+树的阶数k\n" << std::endl;
 	std::cout << "k:";
 	std::cin >> k;
-	BPlusTree* B = new BPlusTree(k);
+	BPlusTree<std::string, int>* B = new BPlusTree<std::string, int>(k);
 	while (true) {
 		std::cout << "************************\n" << std::endl;
 		std::cout << "1，向b+树添加一个元素，key为字符串，data为数字\n" << std::endl;
@@ -70,5 +70,16 @@ void runFrame() {
 
 int main() {
     runFrame();
-    return 0;
+	// BPlusTree<int, int>* B = new BPlusTree<int, int>(3);
+    // std::vector<int> arr = {2, 4, 26, 26, 8, 66, 234, 5, 21, 3, 6, 53, 654, 9, 232, 1, 454, 10, 1231, 43, 23, 42};
+    // for (int i = 0; i < arr.size(); i++) {
+	// 	B->add(arr[i], i);
+	// 	B->showBTree();
+	// }
+	// std::cout << "--------------------------------------------" << std::endl;
+	// for (int i = arr.size() - 1; i >= 0; i--) {
+	// 	B->remove(arr[i]);
+	// 	B->showBTree();
+	// }
+	return 0;
 }

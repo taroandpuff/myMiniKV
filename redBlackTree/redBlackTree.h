@@ -57,6 +57,7 @@ public:
     // 删除任意节点
     void deleted(K key) {
         if (isEmpty()) return;
+        if (!searchKey(root, key)) return;
         if (!isRed(root->left) && !isRed(root->right)) {
             root->color = RED;
         }     
@@ -75,7 +76,7 @@ public:
     }
 
     // 插入数据到树中
-    void insert(K key, V data) {
+    void insert(K key, V data) {    
         root = insert(root, key, data);
         root->color = BLOCK;
     }

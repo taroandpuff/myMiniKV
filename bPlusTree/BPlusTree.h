@@ -9,56 +9,57 @@
 #include<math.h>
 #include<vector>
 #include<string>
-#define McTree new BPlusTree
-#define McNode new TreeNode
+#define McTree new BPlusTree<K, V>
+#define McNode new TreeNode<K, V>
 
 
-
-typedef struct TreeNode{
+template<typename K, typename V>
+class TreeNode{
+public:
     // 存储的key索引
-	std::vector<std::string> keys;
+	std::vector<K> keys;
 	//tag为0表示叶子节点
 	bool tag;
     // 叶子节点储存数据,非叶子节点指向下一层节点
 	struct {
-		std::vector<int> data;
-		std::vector<TreeNode*> sons;
+		std::vector<V> data;
+		std::vector<TreeNode<K, V>*> sons;
 	} values;
     // 叶子节点指向下一叶子节点的指针
-	TreeNode* rLink;
-}TreeNode,* TreePtr;
+	TreeNode<K, V>* rLink;
+};
 
+template<typename K, typename V>
 class BPlusTree {
 private:
     // 根节点
-    TreePtr root;
+    TreeNode<K, V>* root;
     // 指向叶子节点链表的头节点
-    TreePtr linkHead;
+    TreeNode<K, V>* linkHead;
     // 阶数(一个节点最多有K个key)
-    int K;
+    int k;
 private:
     // 二分查找位置
-    size_t bSearch(std::vector<std::string> indexs, std::string key) {
+    size_t bSearch(std::vector<K> indexs, K key) {
         int l = 0;
-        int r = indexs.size() - 1;
-        while (l < r) {
-            int mid = (l + r) >> 1;
-            if (indexs[mid] >= key) {
-                r = mid;
-            } else {
+        int r = indexs.size()-1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (indexs[mid] < key) {
                 l = mid + 1;
             }
+            else {
+                r = mid - 1;
+            }
         }
-        if (l == indexs.size() - 1 && indexs[l] != key) 
-            return indexs.size();
         return l;
     }
 
     // 往上更新索引
-    void up_updata(TreeNode *p, std::vector<TreeNode*> Stack, int i) {
+    void up_updata(TreeNode<K, V>* p, std::vector<TreeNode<K, V>*> Stack, int i) {
         for (; i >= 0; i--) {
             // Stack记录p的上层节点
-            TreeNode *parent = Stack[i];
+            TreeNode<K, V>* parent = Stack[i];
             // pos记录parent中第几个value指向p
             size_t pos = bSearch(parent->keys, p->keys[0]);
             if (parent->keys[pos] == p->keys[p->keys.size() - 1]) {
@@ -70,12 +71,12 @@ private:
         }
     }
     // 查找节点
-    TreeNode* findNode(std::string key,std::vector<TreeNode*> &s) {
+    TreeNode<K, V>* findNode(K key,std::vector<TreeNode<K, V>*> &s) {
         // 如果为树为空,返回空指针
         if (linkHead == nullptr && root == nullptr) return nullptr;
         assert(linkHead && root);
     
-        TreeNode* p = root;
+        TreeNode<K, V>* p = root;
         // 如果不是叶子节点,则不断往下找,并记录路径用于后续更新索引
         while (p->tag) {
             s.push_back(p);
@@ -90,11 +91,11 @@ private:
     }
 
     // 根节点拆分
-    void rootDivide(TreeNode* parent) {
+    void rootDivide(TreeNode<K, V>* parent) {
         // 创建新的根节点
-        TreeNode* newRoot = McNode;
+        TreeNode<K, V>* newRoot = McNode;
         // 创建原根节点拆分后的右边节点
-        TreeNode* rRoot = McNode;
+        TreeNode<K, V>* rRoot = McNode;
         // 同一层节点的tag一致
         rRoot->tag = parent->tag;
         newRoot->tag = 1;
@@ -111,7 +112,7 @@ private:
                 parent->values.sons.erase(parent->values.sons.begin() + i);
             } else {
                 rRoot->values.data.push_back(parent->values.data[i]);
-                rRoot->values.data.erase(parent->values.data.begin() + i);
+                parent->values.data.erase(parent->values.data.begin() + i);
             }
             parent->keys.erase(parent->keys.begin() + i);
         }
@@ -125,13 +126,13 @@ private:
 
 public:
     // 构造函数
-    BPlusTree(int _k): root(nullptr), linkHead(nullptr), K(_k) {}
+    BPlusTree(int _k): root(nullptr), linkHead(nullptr), k(_k) {}
     // 查询
-    bool find(std::string key, int &data) {
+    bool find(K key, V &data) {
         // 栈记录路径节点
-        std::vector<TreeNode*> Stack;
+        std::vector<TreeNode<K, V>*> Stack;
         // 查找到叶子节点
-        TreeNode* leaf = findNode(key, Stack);
+        TreeNode<K, V>* leaf = findNode(key, Stack);
         if (leaf == nullptr) return false;
         assert(leaf && !leaf->tag);
         // 二分查找
@@ -143,16 +144,16 @@ public:
     }    
     
     // 增加节点
-    bool add(std::string key, int data) {
+    bool add(K key, V data) {
         // 记录路径
-        std::vector<TreeNode*> Stack;
+        std::vector<TreeNode<K, V>*> Stack;
         // 查找叶子节点
-        TreeNode* leaf = findNode(key, Stack);
+        TreeNode<K, V>* leaf = findNode(key, Stack);
         // 空树
         if (leaf == nullptr) {
             assert(linkHead == nullptr && root == nullptr);
             // 创建根节点
-            TreeNode* TNode = McNode;
+            TreeNode<K, V>* TNode = McNode;
             TNode->keys.push_back(key);
             TNode->tag = 0;
             TNode->values.data.push_back(data);
@@ -163,11 +164,8 @@ public:
             return true;
         }
         assert(leaf->keys.size() == leaf->values.data.size());
-        std::vector<std::string>::iterator it;
-        //找到该关键字，插入失败
-        if ((it = std::find(leaf->keys.begin(), leaf->keys.end(), key)) != leaf->keys.end()) {
-		    return false;
-	    }
+        size_t l =  bSearch(leaf->keys, key);
+        if (leaf->keys[l] == key) return false;
         // 向上修改内部节点最大值
         size_t pos = bSearch(leaf->keys, key);
         leaf->values.data.insert(leaf->values.data.begin() + pos, data);
@@ -177,10 +175,10 @@ public:
             up_updata(leaf, Stack, Stack.size() - 1);
         }
         // 如果keys数量小于阶数,不需要拆分
-        if (leaf->keys.size() <= K) {
+        if (leaf->keys.size() <= k) {
             return true;
         }
-        assert(leaf->keys.size() == K + 1);
+        assert(leaf->keys.size() == k + 1);
         // 如果插入的位置是根节点,拆分根节点
         if (Stack.empty()) {
             rootDivide(leaf);
@@ -188,12 +186,12 @@ public:
         }
         // i为栈顶指针
         int i = Stack.size() - 1;
-        TreeNode* parent = Stack[i--];
-        TreeNode* p = leaf;
+        TreeNode<K, V>* parent = Stack[i--];
+        TreeNode<K, V>* p = leaf;
         // 循环拆分
-        while (p->keys.size() > K) {
+        while (p->keys.size() > k) {
             // q为p拆分后的右边节点
-            TreeNode *q = McNode;
+            TreeNode<K, V>* q = McNode;
             q->tag = p->tag;
             // 如果是叶子节点,更新指针
             if (p->tag == 0) {
@@ -222,7 +220,7 @@ public:
             parent->values.sons.insert(parent->values.sons.begin() + pos_p + 1, q);
             // 如果 parent是根节点
             if (parent == root) {
-                if (parent->keys.size() > K) {
+                if (parent->keys.size() > k) {
                     rootDivide(parent);
                 }
                 // 处理完,退出循环
@@ -236,18 +234,18 @@ public:
     }
 
     // 删除
-    bool remove(std::string key) {
+    bool remove(K key) {
+        int _t = 0;
+        if (!find(key, _t)) return false;
         if (root == nullptr) return false;
 
-        std::vector<TreeNode*> Stack;
+        std::vector<TreeNode<K, V>*> Stack;
         // 查找叶子节点
-        TreeNode* leaf = findNode(key, Stack);
+        TreeNode<K, V>* leaf = findNode(key, Stack);
         assert(leaf->keys.size() == leaf->values.data.size());
-        std::vector<std::string>::iterator it;
         // 没找到节点,删除失败
-        if ((it = std::find(leaf->keys.begin(), leaf->keys.end(), key)) == leaf->keys.end()) {
-            return false;
-        }
+        int l =  bSearch(leaf->keys, key);
+        if (leaf->keys[l] != key) return false;
         // 向上修改内部节点最大值
         size_t pos = bSearch(leaf->keys, key);
         assert(leaf->keys[pos] == key);
@@ -258,26 +256,26 @@ public:
             up_updata(leaf, Stack,Stack.size() -1);
         }
         // leaf为根节点或节点keys数量大于等于最小值,直接删除
-        if (leaf->keys.size() >= ceil(K / 2.0) || leaf == root) {
+        if (leaf->keys.size() >= ceil(k / 2.0) || leaf == root) {
             return true;
         }
 
         // i为栈顶指针
         int i = Stack.size() - 1;
-        TreeNode* parent = Stack[i--];
-        TreeNode* p = leaf;
+        TreeNode<K, V>* parent = Stack[i--];
+        TreeNode<K, V>* p = leaf;
         // 循环从兄弟节点借值或合并兄弟节点
-        while (p->keys.size() < ceil(K / 2.0)) {
+        while (p->keys.size() < ceil(k / 2.0)) {
             // 查找子节点
             size_t pos = bSearch(parent->keys, p->keys[p->keys.size() - 1]);
             // 有左兄弟,且可以借
-            TreeNode* lBro = nullptr;
+            TreeNode<K, V>* lBro = nullptr;
             if (pos > 0) {
                 lBro = parent->values.sons[pos - 1];
             }
-            if (lBro && lBro->keys.size() > ceil(K / 2.0)) {
+            if (lBro && lBro->keys.size() > ceil(k / 2.0)) {
                 // count为借出的数量,尽量少借
-                int count = ceil((lBro->keys.size() - ceil(K / 2.0)) / 2.0);
+                int count = ceil((lBro->keys.size() - ceil(k / 2.0)) / 2.0);
                 p->keys.insert(p->keys.begin(), lBro->keys.end() - count, lBro->keys.end());
                 // 叶子节点借出数据,非叶子节点借出指向子节点的指针
                 if (p->tag) {
@@ -293,12 +291,12 @@ public:
                 break;                
             }
             // 有右兄弟, 且可以借
-            TreeNode * rBro = NULL;
+            TreeNode<K, V>* rBro = NULL;
             if (pos != parent->keys.size() - 1) {
                 rBro = parent->values.sons[pos + 1];
             }
-            if (rBro && rBro->keys.size() > ceil(K / 2.0)) {
-                size_t Count = ceil((rBro->keys.size() - ceil(K / 2.0)) / 2.0);
+            if (rBro && rBro->keys.size() > ceil(k / 2.0)) {
+                size_t Count = ceil((rBro->keys.size() - ceil(k / 2.0)) / 2.0);
                 p->keys.insert(p->keys.end(), rBro->keys.begin(), rBro->keys.begin() + Count);
                 rBro->keys.erase(rBro->keys.begin(), rBro->keys.begin() + Count);
                 if (rBro->tag) {
@@ -370,7 +368,7 @@ public:
         }
         return true;
     }
-    void print(TreeNode * tNode) {
+    void print(TreeNode<K, V>* tNode) {
         std::cout << "[ ";
         for (int i = 0; i < tNode->keys.size(); i++) {
             if (tNode->tag) {
@@ -385,7 +383,7 @@ public:
     }    
     void showBTree() {
         printf("******************\n");
-        std::queue<TreeNode*> q;
+        std::queue<TreeNode<K, V>*> q;
         q.push(root);
         int printed = 0;//已经打印
         int count = 1;//当前行最后一个是第几个
@@ -395,7 +393,7 @@ public:
                 count = que_count;
             }
             printed++;
-            TreeNode* Node = q.front();
+            TreeNode<K, V>* Node = q.front();
             q.pop();
             print(Node);
             if (printed == count) {
