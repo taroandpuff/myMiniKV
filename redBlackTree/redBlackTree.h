@@ -111,7 +111,6 @@ private:
 
     // LL单旋转
     TreeNode<K, V>* rotateWithLeft(TreeNode<K, V>* k2) {
-        //if (!k2->left) return k2;
         TreeNode<K, V>* k1 = k2->left;
         k2->left =k1->right;
         k1->right = k2;
@@ -122,7 +121,6 @@ private:
 
     // RR单旋转
     TreeNode<K, V>* rotateWithRight(TreeNode<K, V>* k1) {
-        //if (!k1->right) return k1;
         TreeNode<K, V>* k2 = k1->right;
         k1->right =k2->left;
         k2->left = k1;
@@ -133,9 +131,9 @@ private:
 
     // 翻转节点及其两个子节点的颜色
     void colorConversion(TreeNode<K, V>* node) {
-        node->color = !node->color;
-        node->left->color = !node->left->color;
-        node->right->color = !node->right->color;
+        if (node) node->color = !node->color;
+        if (node->left) node->left->color = !node->left->color;
+        if (node->right) node->right->color = !node->right->color;
     }
 
 
@@ -180,9 +178,12 @@ private:
 
     // 删除最小值
     TreeNode<K, V>* deleteMin(TreeNode<K, V>* t) {
-        if (t->left == nullptr) return nullptr;
+        if (!t->left) {
+            if (!t->right) return nullptr;
+            return t->right;
+        }
         // 当前节点的左子节点是2-节点
-        if (!isRed(t->left) && !isRed(t->left->left)) {
+        if (t->left && !isRed(t->left) && t->left->left && !isRed(t->left->left)) {
             t = moveRedLeft(t);
         }
         t->left = deleteMin(t->left);
@@ -202,7 +203,10 @@ private:
     
     // 删除最大值
     TreeNode<K, V>* deleteMax(TreeNode<K, V>* t) {
-        if (t->right == nullptr) return nullptr;
+        if (!t->right) {
+            if (!t->left) return nullptr;
+            return t->left;
+        }
         // 左连接是红连接,为了保证被处理节点的左节点是右节点的兄弟节点,转化成右连接
         if (isRed(t->left)) {
             t = rotateWithLeft(t);
@@ -221,7 +225,7 @@ private:
         if (!t) return nullptr;
         if (key < t->key) {
             // 左节点是2-节点
-            if (!isRed(t->left) && !isRed(t->left->left)) {
+            if (t->left && !isRed(t->left) && t->left->left && !isRed(t->left->left)) {
                 t = moveRedLeft(t);
             }
             t->left = deleted(t->left, key);
@@ -230,18 +234,26 @@ private:
                 t = rotateWithLeft(t);
             }
             // 树底,删除
-            if (t->key == key && t->right == nullptr) {
+            if (t->key == key && t->right == nullptr && t->left == nullptr) {
                 return nullptr;
             }
 
             // 右节点是2-节点
-            if (!isRed(t->right) && !isRed(t->right->left)) {
+            if (t->right && !isRed(t->right) && t->right->left && !isRed(t->right->left)) {
                 t = moveRedLeft(t);
             }
             if (t->key == key) {
-                t->key = findMin(t->right)->key;
-                t->data = findMin(t->right)->data;
-                t->right = deleteMin(t->right);
+                TreeNode<K, V>* temp = findMin(t->right);
+                if (temp) {
+                    t->key = temp->key;
+                    t->data = temp->data;
+                    t->right = deleteMin(t->right);
+                } else {
+                    temp = findMax(t->left);
+                    t->key = temp->key;
+                    t->data = temp->data;
+                    t->left = deleteMax(t->left);
+                }
             } else {
                 t->right = deleted(t->right, key);
             }
