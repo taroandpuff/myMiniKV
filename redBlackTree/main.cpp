@@ -8,12 +8,10 @@ int main() {
         tree.insert(arr[i], i);
     }
     tree.inorderTraversal();
-    tree.searchKey(70);
-    tree.deleted(90);
-    tree.inorderTraversal();
-    tree.deleteMin();
-    tree.inorderTraversal();
-    tree.deleteMax();
-    tree.inorderTraversal();
+    for (int i = 0; i < 8; i++) {
+        tree.searchKey(arr[i]);
+        tree.deleted(arr[i]);
+        tree.inorderTraversal();
+    }
     return 0;
 }

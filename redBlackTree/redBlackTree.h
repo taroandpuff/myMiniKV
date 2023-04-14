@@ -53,6 +53,10 @@ public:
 
     // 递归的中序遍历
     void inorderTraversal() {
+        if (root == nullptr) {
+            std::cout << "empty!" << std::endl;
+            return;
+        }
         inorderTraversal(root);
         std::cout << std::endl;
     }
@@ -107,7 +111,7 @@ private:
 
     // LL单旋转
     TreeNode<K, V>* rotateWithLeft(TreeNode<K, V>* k2) {
-        if (!k2->left) return k2;
+        //if (!k2->left) return k2;
         TreeNode<K, V>* k1 = k2->left;
         k2->left =k1->right;
         k1->right = k2;
@@ -118,7 +122,7 @@ private:
 
     // RR单旋转
     TreeNode<K, V>* rotateWithRight(TreeNode<K, V>* k1) {
-        if (!k1->right) return k1;
+        //if (!k1->right) return k1;
         TreeNode<K, V>* k2 = k1->right;
         k1->right =k2->left;
         k2->left = k1;
@@ -189,7 +193,6 @@ private:
     // 右调整
     TreeNode<K, V>* moveRedRight(TreeNode<K, V>* t) {
         colorConversion(t);
-        // 当前节点的右节点是2-节点但它的兄弟节点不是2-节点,若右子节点是2-节点,则一定有兄弟节点
         if (isRed(t->left->left)) {
             t = rotateWithLeft(t);
             colorConversion(t);
@@ -199,7 +202,7 @@ private:
     
     // 删除最大值
     TreeNode<K, V>* deleteMax(TreeNode<K, V>* t) {
-        if (!t) return nullptr;
+        if (t->right == nullptr) return nullptr;
         // 左连接是红连接,为了保证被处理节点的左节点是右节点的兄弟节点,转化成右连接
         if (isRed(t->left)) {
             t = rotateWithLeft(t);
@@ -230,8 +233,14 @@ private:
             if (t->key == key && t->right == nullptr) {
                 return nullptr;
             }
+
+            // 右节点是2-节点
+            if (!isRed(t->right) && !isRed(t->right->left)) {
+                t = moveRedLeft(t);
+            }
             if (t->key == key) {
                 t->key = findMin(t->right)->key;
+                t->data = findMin(t->right)->data;
                 t->right = deleteMin(t->right);
             } else {
                 t->right = deleted(t->right, key);
