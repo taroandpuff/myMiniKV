@@ -3,7 +3,7 @@
 
 int main() {
     RedBlockTree<int, int> tree;
-    std::vector<int> arr = {2, 4, 8, 66, 5, 21, 3, 6, 53, 9, 232, 1, 454, 10, 43, 23, 42};
+    std::vector<int> arr = {2, 4, 26, 8, 66, 234, 5, 21, 3, 6, 53, 654, 9, 232, 1, 454, 10, 1231, 43, 23, 42};
     for (int i = 0; i < arr.size(); i++) {
         tree.insert(arr[i], i);
         tree.inorderTraversal();
