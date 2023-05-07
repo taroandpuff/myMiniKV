@@ -73,15 +73,15 @@ src/redBlackTree/CMakeFiles/redBlackTree.dir/main.cpp.o: src/redBlackTree/CMakeF
 src/redBlackTree/CMakeFiles/redBlackTree.dir/main.cpp.o: ../src/redBlackTree/main.cpp
 src/redBlackTree/CMakeFiles/redBlackTree.dir/main.cpp.o: src/redBlackTree/CMakeFiles/redBlackTree.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/WorkSpace/myMiniKV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object src/redBlackTree/CMakeFiles/redBlackTree.dir/main.cpp.o"
-	cd /WorkSpace/myMiniKV/build/src/redBlackTree && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/redBlackTree/CMakeFiles/redBlackTree.dir/main.cpp.o -MF CMakeFiles/redBlackTree.dir/main.cpp.o.d -o CMakeFiles/redBlackTree.dir/main.cpp.o -c /WorkSpace/myMiniKV/src/redBlackTree/main.cpp
+	cd /WorkSpace/myMiniKV/build/src/redBlackTree && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/redBlackTree/CMakeFiles/redBlackTree.dir/main.cpp.o -MF CMakeFiles/redBlackTree.dir/main.cpp.o.d -o CMakeFiles/redBlackTree.dir/main.cpp.o -c /WorkSpace/myMiniKV/src/redBlackTree/main.cpp
 
 src/redBlackTree/CMakeFiles/redBlackTree.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/redBlackTree.dir/main.cpp.i"
-	cd /WorkSpace/myMiniKV/build/src/redBlackTree && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /WorkSpace/myMiniKV/src/redBlackTree/main.cpp > CMakeFiles/redBlackTree.dir/main.cpp.i
+	cd /WorkSpace/myMiniKV/build/src/redBlackTree && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /WorkSpace/myMiniKV/src/redBlackTree/main.cpp > CMakeFiles/redBlackTree.dir/main.cpp.i
 
 src/redBlackTree/CMakeFiles/redBlackTree.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/redBlackTree.dir/main.cpp.s"
-	cd /WorkSpace/myMiniKV/build/src/redBlackTree && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /WorkSpace/myMiniKV/src/redBlackTree/main.cpp -o CMakeFiles/redBlackTree.dir/main.cpp.s
+	cd /WorkSpace/myMiniKV/build/src/redBlackTree && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /WorkSpace/myMiniKV/src/redBlackTree/main.cpp -o CMakeFiles/redBlackTree.dir/main.cpp.s
 
 # Object files for target redBlackTree
 redBlackTree_OBJECTS = \

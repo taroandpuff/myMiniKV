@@ -40,19 +40,19 @@ public:
     ~Node();
 
     // 节点操作
-    K get_key() const;
-    V get_value() const;
-    void set_value(V);
+    K getKey() const;
+    V getValue() const;
+    void setValue(V);
 
     // 超时设置
-    bool is_set_expire() const {
-        return this->set_expire;
+    bool isSetExpire() const {
+        return this->setExpire;
     }
-    bool is_expired() const;
-    time_t get_expire_systime() const;
-    TimeStamp get_expire_timestamp() const;
-    void set_expire_time(int);
-    void expand_expire_time(int);
+    bool isExpired() const;
+    time_t getExpireSystime() const;
+    TimeStamp getExpireTimeStamp() const;
+    void setExpireTime(int);
+    void expandExpireTime(int);
 
     // 输出当前节点情况
     void print() const;
@@ -61,24 +61,24 @@ public:
     Node<K, V> **forward;
 
     // 节点层级(所在层级)
-    int node_level;
+    int nodeLevel;
 
 private:
     K key;
     V value;
-    TimeStamp expire_time;
-    bool set_expire;
+    TimeStamp expireTime;
+    bool setExpire;
 };
 
 // 根据 timeout 设置超时时间
 template <typename K, typename V>
-Node<K, V>::Node(const K k, const V v, int level, int timeout): key(k), value(v), node_level(level) {
+Node<K, V>::Node(const K k, const V v, int level, int timeout): key(k), value(v), nodeLevel(level) {
     if (timeout > 0) {
-        this->expire_time = Clock::now() + SECOND(timeout);
-        this->set_expire = true;
+        this->expireTime = Clock::now() + SECOND(timeout);
+        this->setExpire = true;
     } else {
-        this->expire_time = Clock::now();
-        this->set_expire = false;
+        this->expireTime = Clock::now();
+        this->setExpire = false;
     }
 
     // level加1, 因为index从0到level
@@ -96,22 +96,22 @@ Node<K, V>::~Node() {
 
 // 获取key
 template <typename K, typename V>
-K Node<K, V>::get_key() const {
+K Node<K, V>::getKey() const {
     return key;
 }
 
 // 获取value
 template <typename K, typename V>
-V Node<K, V>::get_value() const {
+V Node<K, V>::getValue() const {
     return value;
 }
 
 
 // 判断是否超时
 template <typename K, typename V>
-bool Node<K, V>::is_expired() const {
-    if (this->set_expire) {
-        if (std::chrono::duration_cast<SECOND>(this->get_expire_timestamp() - Clock::now()).count() <= 0) {
+bool Node<K, V>::isExpired() const {
+    if (this->setExpire) {
+        if (std::chrono::duration_cast<SECOND>(this->getExpireTimeStamp() - Clock::now()).count() <= 0) {
             return true;
         }
     }
@@ -120,34 +120,34 @@ bool Node<K, V>::is_expired() const {
 
 // 更新value
 template<typename K, typename V>
-void Node<K, V>::set_value(V value) {
+void Node<K, V>::setValue(V value) {
     this->value = value;
 }
 
 // 获取超时时间
 template<typename K, typename V>
-TimeStamp Node<K, V>::get_expire_timestamp() const {
-    return this->expire_time;
+TimeStamp Node<K, V>::getExpireTimeStamp() const {
+    return this->expireTime;
 }
 
 template<typename K, typename V>
-time_t Node<K, V>::get_expire_systime() const {
-    time_t time = std::chrono::system_clock::to_time_t(this->expire_time);
+time_t Node<K, V>::getExpireSystime() const {
+    time_t time = std::chrono::system_clock::to_time_t(this->expireTime);
     return time;
 }
 
 // 添加超时时间设置
 template<typename K, typename V>
-void Node<K, V>::set_expire_time(int timeout) {
-    this->set_expire = true;
-    this->expire_time += SECOND(timeout);
+void Node<K, V>::setExpireTime(int timeout) {
+    this->setExpire = true;
+    this->expireTime += SECOND(timeout);
 }
 
 // 延长超时时间
 template <typename K, typename V>
-void Node<K, V>::expand_expire_time(int timeout) {
-    if (this->set_expire) {
-        this->expire_time += SECOND(timeout);
+void Node<K, V>::expandExpireTime(int timeout) {
+    if (this->setExpire) {
+        this->expireTime += SECOND(timeout);
     }
 }
 
@@ -155,11 +155,11 @@ void Node<K, V>::expand_expire_time(int timeout) {
 template<typename K, typename V>
 void Node<K, V>::print() const {
     std::string outputs("The Node is ");
-    outputs += this->get_key() + " : " + this->get_value();
-    if (this->is_set_expire()) {
-        char buf[50] = "-> expire_time : ";
-        time_t expire_time = this->get_expire_systime();
-        strftime(buf + strlen(buf), sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&expire_time));
+    outputs += this->getKey() + " : " + this->getValue();
+    if (this->isSetExpire()) {
+        char buf[50] = "-> expireTime : ";
+        time_t expireTime = this->getExpireSystime();
+        strftime(buf + strlen(buf), sizeof(buf), "%Y-%m-%d %H:%M:%S", localtime(&expireTime));
         outputs += buf;
     }
     std::cout << outputs << std::endl;
@@ -172,15 +172,15 @@ public:
     SkipList(int, int);
     ~SkipList();
 
-    int get_random_level();
+    int getRandomLevel();
 
-    Node<K, V> *create_node(K, V, int, bool);
+    Node<K, V> *createNode(K, V, int, bool);
 
     // 展示节点
-    void display_list();
+    void displayList();
 
     // 节点操作
-    int insert_element(K, V);
+    int insertElement(K, V);
     bool is_exist_element(K);
     bool search_element(K);
     void delete_element(K);
@@ -193,7 +193,7 @@ public:
 
 private:
     // 通过字符串读取节点值
-    void get_key_value_from_string(const std::string &str, std::string *key, std::string *value);
+    void getKey_value_from_string(const std::string &str, std::string *key, std::string *value);
     bool is_valid_string(const std::string &str);
     // 默认超时时间
     int timeout;
@@ -216,9 +216,9 @@ private:
 
 // 创建新节点
 template <typename K, typename V>
-Node<K, V>* SkipList<K, V>::create_node(const K k, const V v, int level, bool set_expire) {
+Node<K, V>* SkipList<K, V>::createNode(const K k, const V v, int level, bool setExpire) {
     int timeout = -1;
-    if (set_expire) {
+    if (setExpire) {
         timeout = this->timeout + rand() % 1800;
     }
     Node<K, V> *node = new Node<K, V>(k, v, level, timeout);
@@ -247,7 +247,7 @@ level 0         1    4    9  10         30   40  | 50 |  60      70       100
 
 */
 template <typename K, typename V>
-int SkipList<K, V>::insert_element(const K key, const V value) {
+int SkipList<K, V>::insertElement(const K key, const V value) {
     mtx.lock();
     // 获取头节点
     Node<K, V>* current = this->_header;
@@ -258,24 +258,24 @@ int SkipList<K, V>::insert_element(const K key, const V value) {
     // 从最高层开始寻找
     for (int i = _skip_list_level; i >= 0; i--) {
         // 当下一节点为空或者key大于插入值的key时,进入下一层,继续寻找
-        while (current->forward[i] != NULL && current->forward[i]->get_key() < key) {
+        while (current->forward[i] != NULL && current->forward[i]->getKey() < key) {
             current = current->forward[i];
         }
         update[i] = current;
     }
     current = current->forward[0];
     // 如果成功找到节点
-    if (current != NULL && current->get_key() == key) {
-        current->set_value(value);
+    if (current != NULL && current->getKey() == key) {
+        current->setValue(value);
         std::cout << "The node is exists, but has been changed" << std::endl;
         mtx.unlock();
         return 1;
     }
 
     // 如果没有找到值相同的节点, 进行插入操作
-    if (current == NULL || current->get_key() != key) {
+    if (current == NULL || current->getKey() != key) {
         // 获取随机层级高度
-        int random_level = get_random_level();
+        int random_level = getRandomLevel();
 
         // 如果random_level大于当前最大层级高度
         if (random_level > _skip_list_level) {
@@ -286,7 +286,7 @@ int SkipList<K, V>::insert_element(const K key, const V value) {
         }
 
         // 创建节点
-        Node<K, V> *inserted_node = create_node(key, value, random_level, false);
+        Node<K, V> *inserted_node = createNode(key, value, random_level, false);
 
         // 插入节点
         for (int i = 0; i <= random_level; i++) {
@@ -302,7 +302,7 @@ int SkipList<K, V>::insert_element(const K key, const V value) {
 
 // 展示跳表
 template <typename K, typename V>
-void SkipList<K, V>::display_list() {
+void SkipList<K, V>::displayList() {
         std::cout << "\n*****Skip List*****"
               << "\n";
         for (int i = 0; i <= _skip_list_level; i++) {
@@ -331,8 +331,8 @@ bool SkipList<K, V>::dump_file() {
 
         while (node != NULL) {
             // 如果节点未超时
-            if (!node->is_expired()) {
-                _file_writer << node->get_key() << " : " << node->get_value() << '\n';
+            if (!node->isExpired()) {
+                _file_writer << node->getKey() << " : " << node->getValue() << '\n';
             } 
             node->print();
             node = node->forward[0];
@@ -358,11 +358,11 @@ void SkipList<K, V>::load_file() {
     std::string *key = new std::string();
     std::string *value = new std::string();
     while (getline(_file_reader, line)) {
-        get_key_value_from_string(line, key, value);
+        getKey_value_from_string(line, key, value);
         if (key->empty() || value->empty()) {
             continue;
         }
-        insert_element(*key, *value);
+        insertElement(*key, *value);
         std::cout << "key: " << *key << " value: " << *value << std::endl;
     }
     _file_reader.close();    
@@ -375,7 +375,7 @@ int SkipList<K, V>::size() {
 }
 
 template <typename K, typename V>
-void SkipList<K, V>::get_key_value_from_string(const std::string &str, std::string *key, std::string *value) {
+void SkipList<K, V>::getKey_value_from_string(const std::string &str, std::string *key, std::string *value) {
     if (!is_valid_string(str)) return;
     *key = str.substr(0, str.find(delimiter));
     *value = str.substr(str.find(delimiter) + 1, str.length());
@@ -402,14 +402,14 @@ void SkipList<K, V>::delete_element(K key) {
 
     // 从最高点开始查找
     for (int i = _skip_list_level; i >= 0; i--) {
-        while (current->forward[i] != NULL && current->forward[i]->get_key() < key) {
+        while (current->forward[i] != NULL && current->forward[i]->getKey() < key) {
             current = current->forward[i];            
         }
         update[i] = current;
     }
 
     current = current->forward[0];
-    if (current != NULL && current->get_key() == key) {
+    if (current != NULL && current->getKey() == key) {
         // 从最低点开始删除
         for (int i = 0; i <= _skip_list_level; i++) {
             // 如果该层没有目标节点,则已经删除完
@@ -455,14 +455,14 @@ bool SkipList<K, V>::search_element(K key) {
     
     // 从最高层开始找
     for (int i = _skip_list_level; i >= 0; i--) {
-        while (current->forward[i] && current->forward[i]->get_key() < key) {
+        while (current->forward[i] && current->forward[i]->getKey() < key) {
             current = current->forward[i];        
         }
     }
 
     current = current->forward[0];
 
-    if (current != NULL && current->get_key() == key) {
+    if (current != NULL && current->getKey() == key) {
         current->print();
         return true;
     }
@@ -477,14 +477,14 @@ bool SkipList<K, V>::is_exist_element(K key) {
     Node<K, V> *current = _header;
 
     for (int i = _skip_list_level; i >= 0; i--) {
-        while (current->forward[i] != NULL && current->forward[i]->get_key() < key) {
+        while (current->forward[i] != NULL && current->forward[i]->getKey() < key) {
             current = current->forward[i];
         }
     }
 
     current = current->forward[0];
 
-    if (current != NULL && current->get_key() == key) {
+    if (current != NULL && current->getKey() == key) {
         return true;
     }
     return false;
@@ -496,15 +496,15 @@ Node<K, V>* SkipList<K, V>::set_expire_key(K key, int time) {
     Node<K, V> *current = _header;
 
     for (int i = _skip_list_level; i >= 0; i--) {
-        while (current->forward[i] && current->forward[i]->get_key() < key) {
+        while (current->forward[i] && current->forward[i]->getKey() < key) {
             current = current->forward[i];
         }
     }
     current = current->forward[0];
     
-    if (current != NULL && current->get_key() == key) {
-        current->set_expire_time(this->timeout);
-        current->expand_expire_time(time);
+    if (current != NULL && current->getKey() == key) {
+        current->setExpireTime(this->timeout);
+        current->expandExpireTime(time);
         current->print();
         return current;
     }
@@ -543,7 +543,7 @@ SkipList<K, V>::~SkipList()
 
 // 获取随机层数
 template <typename K, typename V>
-int SkipList<K, V>::get_random_level()
+int SkipList<K, V>::getRandomLevel()
 {
 
     int k = 1;

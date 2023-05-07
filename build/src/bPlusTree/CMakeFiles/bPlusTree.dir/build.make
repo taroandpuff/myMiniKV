@@ -73,15 +73,15 @@ src/bPlusTree/CMakeFiles/bPlusTree.dir/main.cpp.o: src/bPlusTree/CMakeFiles/bPlu
 src/bPlusTree/CMakeFiles/bPlusTree.dir/main.cpp.o: ../src/bPlusTree/main.cpp
 src/bPlusTree/CMakeFiles/bPlusTree.dir/main.cpp.o: src/bPlusTree/CMakeFiles/bPlusTree.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/WorkSpace/myMiniKV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object src/bPlusTree/CMakeFiles/bPlusTree.dir/main.cpp.o"
-	cd /WorkSpace/myMiniKV/build/src/bPlusTree && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/bPlusTree/CMakeFiles/bPlusTree.dir/main.cpp.o -MF CMakeFiles/bPlusTree.dir/main.cpp.o.d -o CMakeFiles/bPlusTree.dir/main.cpp.o -c /WorkSpace/myMiniKV/src/bPlusTree/main.cpp
+	cd /WorkSpace/myMiniKV/build/src/bPlusTree && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/bPlusTree/CMakeFiles/bPlusTree.dir/main.cpp.o -MF CMakeFiles/bPlusTree.dir/main.cpp.o.d -o CMakeFiles/bPlusTree.dir/main.cpp.o -c /WorkSpace/myMiniKV/src/bPlusTree/main.cpp
 
 src/bPlusTree/CMakeFiles/bPlusTree.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/bPlusTree.dir/main.cpp.i"
-	cd /WorkSpace/myMiniKV/build/src/bPlusTree && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /WorkSpace/myMiniKV/src/bPlusTree/main.cpp > CMakeFiles/bPlusTree.dir/main.cpp.i
+	cd /WorkSpace/myMiniKV/build/src/bPlusTree && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /WorkSpace/myMiniKV/src/bPlusTree/main.cpp > CMakeFiles/bPlusTree.dir/main.cpp.i
 
 src/bPlusTree/CMakeFiles/bPlusTree.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/bPlusTree.dir/main.cpp.s"
-	cd /WorkSpace/myMiniKV/build/src/bPlusTree && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /WorkSpace/myMiniKV/src/bPlusTree/main.cpp -o CMakeFiles/bPlusTree.dir/main.cpp.s
+	cd /WorkSpace/myMiniKV/build/src/bPlusTree && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /WorkSpace/myMiniKV/src/bPlusTree/main.cpp -o CMakeFiles/bPlusTree.dir/main.cpp.s
 
 # Object files for target bPlusTree
 bPlusTree_OBJECTS = \

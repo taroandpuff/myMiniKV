@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/WorkSpace/myMiniKV/build/src/skipList",
+  "command": "/usr/bin/g++  -I/WorkSpace/myMiniKV/include -I/WorkSpace/myMiniKV/include/bPlusTree -I/WorkSpace/myMiniKV/include/redBlackTree -I/WorkSpace/myMiniKV/include/skipList -g -g -o CMakeFiles/skipList.dir/main.cpp.o -c /WorkSpace/myMiniKV/src/skipList/main.cpp",
+  "file": "/WorkSpace/myMiniKV/src/skipList/main.cpp"
+},
+{
+  "directory": "/WorkSpace/myMiniKV/build/src/redBlackTree",
+  "command": "/usr/bin/g++  -I/WorkSpace/myMiniKV/include -I/WorkSpace/myMiniKV/include/bPlusTree -I/WorkSpace/myMiniKV/include/redBlackTree -I/WorkSpace/myMiniKV/include/skipList -g -g -o CMakeFiles/redBlackTree.dir/main.cpp.o -c /WorkSpace/myMiniKV/src/redBlackTree/main.cpp",
+  "file": "/WorkSpace/myMiniKV/src/redBlackTree/main.cpp"
+},
+{
+  "directory": "/WorkSpace/myMiniKV/build/src/bPlusTree",
+  "command": "/usr/bin/g++  -I/WorkSpace/myMiniKV/include -I/WorkSpace/myMiniKV/include/bPlusTree -I/WorkSpace/myMiniKV/include/redBlackTree -I/WorkSpace/myMiniKV/include/skipList -g -g -o CMakeFiles/bPlusTree.dir/main.cpp.o -c /WorkSpace/myMiniKV/src/bPlusTree/main.cpp",
+  "file": "/WorkSpace/myMiniKV/src/bPlusTree/main.cpp"
+}
+]

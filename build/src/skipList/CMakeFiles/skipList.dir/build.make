@@ -73,15 +73,15 @@ src/skipList/CMakeFiles/skipList.dir/main.cpp.o: src/skipList/CMakeFiles/skipLis
 src/skipList/CMakeFiles/skipList.dir/main.cpp.o: ../src/skipList/main.cpp
 src/skipList/CMakeFiles/skipList.dir/main.cpp.o: src/skipList/CMakeFiles/skipList.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/WorkSpace/myMiniKV/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object src/skipList/CMakeFiles/skipList.dir/main.cpp.o"
-	cd /WorkSpace/myMiniKV/build/src/skipList && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/skipList/CMakeFiles/skipList.dir/main.cpp.o -MF CMakeFiles/skipList.dir/main.cpp.o.d -o CMakeFiles/skipList.dir/main.cpp.o -c /WorkSpace/myMiniKV/src/skipList/main.cpp
+	cd /WorkSpace/myMiniKV/build/src/skipList && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/skipList/CMakeFiles/skipList.dir/main.cpp.o -MF CMakeFiles/skipList.dir/main.cpp.o.d -o CMakeFiles/skipList.dir/main.cpp.o -c /WorkSpace/myMiniKV/src/skipList/main.cpp
 
 src/skipList/CMakeFiles/skipList.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/skipList.dir/main.cpp.i"
-	cd /WorkSpace/myMiniKV/build/src/skipList && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /WorkSpace/myMiniKV/src/skipList/main.cpp > CMakeFiles/skipList.dir/main.cpp.i
+	cd /WorkSpace/myMiniKV/build/src/skipList && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /WorkSpace/myMiniKV/src/skipList/main.cpp > CMakeFiles/skipList.dir/main.cpp.i
 
 src/skipList/CMakeFiles/skipList.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/skipList.dir/main.cpp.s"
-	cd /WorkSpace/myMiniKV/build/src/skipList && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /WorkSpace/myMiniKV/src/skipList/main.cpp -o CMakeFiles/skipList.dir/main.cpp.s
+	cd /WorkSpace/myMiniKV/build/src/skipList && /usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /WorkSpace/myMiniKV/src/skipList/main.cpp -o CMakeFiles/skipList.dir/main.cpp.s
 
 # Object files for target skipList
 skipList_OBJECTS = \
