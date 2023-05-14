@@ -202,7 +202,7 @@ TreeNode<K, V>* RedBlockTree<K, V>::balance(TreeNode<K, V>* t) {
 template<typename K, typename V>
 TreeNode<K, V>* RedBlockTree<K, V>::moveRedLeft(TreeNode<K, V>* t) {
     colorConversion(t);
-    // 当前节点的左子节点是2-节点而它的兄弟不是2-节点,若左子节点是2-节点,则一定有兄弟节点
+    // 当前节点的左子节点是2-节点而它的兄弟不是2-节点
     if (isRed(t->right->left)) {
         t->right = rotateWithLeft(t->right);
         t = rotateWithRight(t);
