@@ -1,1 +1,1 @@
-/usr/bin/g++ -g -g -rdynamic CMakeFiles/bPlusTree.dir/main.cpp.o -o ../../../bin/bPlusTree  -lpthread 
+/usr/bin/g++ -g -rdynamic CMakeFiles/bPlusTree.dir/main.cpp.o -o ../../../bin/bPlusTree  -lpthread 

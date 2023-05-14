@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "/WorkSpace/myMiniKV/bin/redBlackTree"
+			"path" : "/WorkSpace/myMiniKV/bin/bPlusTree"
 		}
 	],
 	"backtrace" : 1,
@@ -16,7 +16,7 @@
 		],
 		"files" : 
 		[
-			"src/redBlackTree/CMakeLists.txt",
+			"src/bPlusTree/CMakeLists.txt",
 			"CMakeLists.txt"
 		],
 		"nodes" : 
@@ -71,7 +71,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -g"
+					"fragment" : "-g"
 				}
 			],
 			"includes" : 
@@ -100,13 +100,13 @@
 			]
 		}
 	],
-	"id" : "redBlackTree::@8eb9b197cb0058b26c66",
+	"id" : "bPlusTree::@439532b3cd4c978a16c8",
 	"link" : 
 	{
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-g -g",
+				"fragment" : "-g",
 				"role" : "flags"
 			},
 			{
@@ -121,12 +121,12 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "redBlackTree",
-	"nameOnDisk" : "redBlackTree",
+	"name" : "bPlusTree",
+	"nameOnDisk" : "bPlusTree",
 	"paths" : 
 	{
-		"build" : "src/redBlackTree",
-		"source" : "src/redBlackTree"
+		"build" : "src/bPlusTree",
+		"source" : "src/bPlusTree"
 	},
 	"sourceGroups" : 
 	[
@@ -143,7 +143,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/redBlackTree/main.cpp",
+			"path" : "src/bPlusTree/main.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

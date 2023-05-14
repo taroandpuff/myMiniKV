@@ -111,7 +111,7 @@ src/skipList/CMakeFiles/skipList.dir/main.cpp.o: \
  /usr/include/c++/8/bits/basic_ios.tcc \
  /usr/include/c++/8/bits/ostream.tcc /usr/include/c++/8/istream \
  /usr/include/c++/8/bits/istream.tcc \
- /WorkSpace/myMiniKV/include/skipList/Skip_Database.h \
+ /WorkSpace/myMiniKV/include/skipList/SkipDatabase.h \
  /WorkSpace/myMiniKV/include/skipList/skipList.h /usr/include/c++/8/cmath \
  /usr/include/math.h /usr/include/bits/math-vector.h \
  /usr/include/bits/libm-simd-decl-stubs.h \

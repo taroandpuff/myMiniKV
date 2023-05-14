@@ -76,7 +76,7 @@
 					]
 				}
 			],
-			"name" : "Debug",
+			"name" : "",
 			"projects" : 
 			[
 				{
@@ -102,21 +102,21 @@
 				{
 					"directoryIndex" : 4,
 					"id" : "bPlusTree::@439532b3cd4c978a16c8",
-					"jsonFile" : "target-bPlusTree-Debug-248907c0128976494d4f.json",
+					"jsonFile" : "target-bPlusTree-758783be7aedbee09242.json",
 					"name" : "bPlusTree",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 3,
 					"id" : "redBlackTree::@8eb9b197cb0058b26c66",
-					"jsonFile" : "target-redBlackTree-Debug-d743f112d1578d9b5f38.json",
+					"jsonFile" : "target-redBlackTree-123ff04d1dea58aaac4e.json",
 					"name" : "redBlackTree",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 2,
 					"id" : "skipList::@cff70d930e734e0ab6d4",
-					"jsonFile" : "target-skipList-Debug-8de344561c29ed02a112.json",
+					"jsonFile" : "target-skipList-a6a946ace270de051ce6.json",
 					"name" : "skipList",
 					"projectIndex" : 0
 				}

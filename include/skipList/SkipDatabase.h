@@ -54,47 +54,47 @@ class SkipDatabase {
 
 public:
     // 构造函数
-    SkipDatabase(int max_level_, int timeout_, int cycle_deletetime_, int cycle_dumptime_, int cap) : 
-            max_level(max_level_), timeout(timeout_), cycle_deletetime(cycle_deletetime_), 
-            cycle_dumptime(cycle_dumptime_),capacity(cap), expired_key(0), is_close(false), 
-            is_dump(false), skipList(new Skip(max_level, timeout)), lru(new LRU_Cache<K, PAGE*>(capacity)) {
-            skipList->load_file();
+    SkipDatabase(int maxLevel_, int timeout_, int cycleDeletetime_, int cycleDumptime_, int cap) : 
+            maxLevel(maxLevel_), timeout(timeout_), cycleDeletetime(cycleDeletetime_), 
+            cycleDumptime(cycleDumptime_),capacity(cap), expiredKey(0), isClose(false), 
+            isDump(false), skipList(new Skip(maxLevel_, timeout_)), lru(new LRUCache<K, PAGE*>(capacity)) {
+            skipList->loadFile();
             }
     // 析构函数
     ~SkipDatabase() {
-        is_close = true;
-        Skipdb::dump_file(this);
+        isClose = true;
+        Skipdb::dumpFile(this);
     }
 
     void run();
 private:
     void handler(std::vector<std::string>&);
-    static void dump_file(void*);
-    static void cycle_to_delete(void*);
-    void lazy_to_delete(K);
-    bool set_func(std::vector<std::string>&);
-    bool expire_func(std::vector<std::string>&);
-    bool keys_func(std::vector<std::string>&);
-    bool del_func(std::vector<std::string>&);
-    bool show_func(std::vector<std::string>&);
-    bool dump_func(std::vector<std::string>&);
-    bool close_func(std::vector<std::string>&);
+    static void dumpFile(void*);
+    static void cycleToDelete(void*);
+    void lazyToDelete(K);
+    bool setFunc(std::vector<std::string>&);
+    bool expireFunc(std::vector<std::string>&);
+    bool keysFunc(std::vector<std::string>&);
+    bool delFunc(std::vector<std::string>&);
+    bool showFunc(std::vector<std::string>&);
+    bool dumpFunc(std::vector<std::string>&);
+    bool closeFunc(std::vector<std::string>&);
 private:
-    int max_level;
+    int maxLevel;
     // 跳表默认超时时间
     int timeout;
     // 周期性删除过期键时间
-    int cycle_deletetime;
+    int cycleDeletetime;
     // 周期存盘时间
-    int cycle_dumptime;
+    int cycleDumptime;
     int capacity;
-    int expired_key;
-    std::atomic<bool> is_close;
-    std::atomic<bool> is_dump;
-    std::mutex m_mutex;
+    int expiredKey;
+    std::atomic<bool> isClose;
+    std::atomic<bool> isDump;
+    std::mutex mMutex;
     std::unique_ptr<Skip> skipList;
     // 只存放设置了过期时间的键，指向跳表中节点的指针
-    std::unique_ptr<LRU_Cache<K, PAGE*>> lru;
+    std::unique_ptr<LRUCache<K, PAGE*>> lru;
     static std::unordered_map<std::string, KEY_STATE> ALLSTATE;
 };   
 
@@ -108,12 +108,12 @@ std::unordered_map<std::string, KEY_STATE> SkipDatabase<K, V>::ALLSTATE{
 // 总运行函数
 template<typename K, typename V>
 void SkipDatabase<K, V>::run() {
-    std::thread dump_thread(Skipdb::dump_file, this);
-    std::thread delete_thread(Skipdb::cycle_to_delete, this);
-    dump_thread.detach();
-    delete_thread.detach();
+    std::thread dumpThread(Skipdb::dumpFile, this);
+    std::thread deleteThread(Skipdb::cycleToDelete, this);
+    dumpThread.detach();
+    deleteThread.detach();
     std::stringstream sstream;
-    while (!is_close) {
+    while (!isClose) {
         std::string line;
         std::getline(std::cin, line);
         sstream << line;
@@ -143,37 +143,37 @@ void SkipDatabase<K, V>::handler(std::vector<std::string>& commands) {
             switch (state)
             {
             case SET:
-                if (!set_func(commands)) {
+                if (!setFunc(commands)) {
                     std::cout << "Please input SET key value [timeout]\n";
                 }
                 break;
             case KEYS:
-                if (!keys_func(commands)) {
+                if (!keysFunc(commands)) {
                     std::cout << "Please input KEYS key\n";
                 }
                 break;
             case EXPIRE:
-                if (!expire_func(commands)) {
+                if (!expireFunc(commands)) {
                     std::cout << "Please input EXPIRE key timeout\n";
                 }
                 break;
             case DEL:
-                if (!del_func(commands)) {
+                if (!delFunc(commands)) {
                     std::cout << "Please input DEL key";
                 }
                 break;
             case SHOW:
-                if (!show_func(commands)) {
+                if (!showFunc(commands)) {
                     std::cout << "Please input SHOW ALL/CAP\n";
                 }
                 break;
             case DUMP:
-                if (!dump_func(commands)) {
+                if (!dumpFunc(commands)) {
                     std::cout << "Please only input DUMP\n";
                 }
                 break;
             case CLOSE:
-                if (!close_func(commands)) {
+                if (!closeFunc(commands)) {
                     std::cout << "Please only input CLOSE\n";
                 }
                 break;
@@ -189,33 +189,33 @@ void SkipDatabase<K, V>::handler(std::vector<std::string>& commands) {
 
 // 周期性存盘
 template<typename K, typename V>
-void SkipDatabase<K, V>::dump_file(void* arg) {
+void SkipDatabase<K, V>::dumpFile(void* arg) {
     Skipdb* ptr = (Skipdb*)arg;
-        while (!ptr->is_close) {
-            std::this_thread::sleep_for(std::chrono::seconds(ptr->cycle_dumptime));
-            ptr->skipList->dump_file();
+        while (!ptr->isClose) {
+            std::this_thread::sleep_for(std::chrono::seconds(ptr->cycleDumptime));
+            ptr->skipList->dumpFile();
         }    
 }
 
 // 周期删除过期键
 template<typename K, typename V>
-void SkipDatabase<K, V>::cycle_to_delete(void* arg) {
+void SkipDatabase<K, V>::cycleToDelete(void* arg) {
     Skipdb* ptr = (Skipdb*)arg;
-    while (!ptr->is_close) {
-        std::this_thread::sleep_for(std::chrono::seconds(ptr->cycle_deletetime));
+    while (!ptr->isClose) {
+        std::this_thread::sleep_for(std::chrono::seconds(ptr->cycleDeletetime));
         // 获得设置了过期时间的键数量
-        size_t num = ptr->lru->get_current_capacity();
+        size_t num = ptr->lru->getCurrentCapacity();
         if (num <= 0) continue;
         // 随机获得删除过期键数量
-        int wait_to_delete = rand() % num;
-        while (wait_to_delete--) {
-            auto key = ptr->lru->get_head_key();
+        int waitToDelete = rand() % num;
+        while (waitToDelete--) {
+            auto key = ptr->lru->getHeadKey();
             // 如果已经过期
-            if (ptr->lru->is_exist(key) && ptr->lru->is_expired(key)) {
+            if (ptr->lru->isExist(key) && ptr->lru->isExpired(key)) {
                 std::cout << "cycle_delete" << std::endl;
-                ptr->expired_key++;
-                ptr->skipList->delete_element(key);
-                ptr->lru->delete_key(key);
+                ptr->expiredKey++;
+                ptr->skipList->deleteElement(key);
+                ptr->lru->deleteKey(key);
             }
         }
     }
@@ -223,13 +223,13 @@ void SkipDatabase<K, V>::cycle_to_delete(void* arg) {
 
 // 惰性删除
 template<typename K, typename V>
-void SkipDatabase<K, V>::lazy_to_delete(K key) {
+void SkipDatabase<K, V>::lazyToDelete(K key) {
     // 键已过期
-    if (lru->is_expired(key)) {
-        this->expired_key++;
-        skipList->delete_element(key);
-        if (lru->is_exist(key)) {
-            lru->delete_key(key);
+    if (lru->isExpired(key)) {
+        this->expiredKey++;
+        skipList->deleteElement(key);
+        if (lru->isExist(key)) {
+            lru->deleteKey(key);
         }
     }
     return;
@@ -237,17 +237,17 @@ void SkipDatabase<K, V>::lazy_to_delete(K key) {
 
 // 添加键
 template<typename K, typename V>
-bool SkipDatabase<K, V>::set_func(std::vector<std::string>& commands) {
+bool SkipDatabase<K, V>::setFunc(std::vector<std::string>& commands) {
     if (commands.size() < 3) return false;
     K key(commands[1]);
     V value(commands[2]);
     // 默认不设置超时时间
-    skipList->insert_element(key, value);
+    skipList->insertElement(key, value);
     if (commands.size() == 4) {
         int time = validStoi(commands[3]);
         if (time > 0) {
-            auto node = skipList->set_expire_key(key, time);
-            lru->set_key(key, node);
+            auto node = skipList->setExpireKey(key, time);
+            lru->setKey(key, node);
             return true;
         }
     }
@@ -256,15 +256,15 @@ bool SkipDatabase<K, V>::set_func(std::vector<std::string>& commands) {
 
 // 设置超时时间
 template<typename K, typename V>
-bool SkipDatabase<K, V>::expire_func(std::vector<std::string>& commands) {
+bool SkipDatabase<K, V>::expireFunc(std::vector<std::string>& commands) {
         if (commands.size() != 3) return false;
         K key(commands[1]);
-        if (skipList->is_exist_element(key)) {
+        if (skipList->isExistElement(key)) {
             int time = validStoi(commands[2]);
             if (time > 0) {
                 // 第三个参数控制是否打印
-                auto node = skipList->set_expire_key(key, time);
-                lru->set_key(key, node);
+                auto node = skipList->setExpireKey(key, time);
+                lru->setKey(key, node);
                 return true;
             }
         }
@@ -273,11 +273,11 @@ bool SkipDatabase<K, V>::expire_func(std::vector<std::string>& commands) {
 
 // 查询键
 template<typename K, typename V>
-bool SkipDatabase<K, V>::keys_func(std::vector<std::string>& commands) {
+bool SkipDatabase<K, V>::keysFunc(std::vector<std::string>& commands) {
     if (commands.size() != 2) return false;
     K key(commands[1]);
-    if (skipList->search_element(key)) {
-        lazy_to_delete(key);
+    if (skipList->searchElement(key)) {
+        lazyToDelete(key);
         return true;
     }
     return false;
@@ -285,15 +285,15 @@ bool SkipDatabase<K, V>::keys_func(std::vector<std::string>& commands) {
 
 // 删除键
 template<typename K, typename V>
-bool SkipDatabase<K, V>::del_func(std::vector<std::string>& commands) {
+bool SkipDatabase<K, V>::delFunc(std::vector<std::string>& commands) {
         if (commands.size() != 2) return false;
         K key(commands[1]);
         // 若跳表中存在该节点则删除
-        if (skipList->is_exist_element(key)) {
-            skipList->delete_element(key);
+        if (skipList->isExistElement(key)) {
+            skipList->deleteElement(key);
             // 若在 LRU 中也存在则删除该节点
-            if (lru->is_exist(key)) {
-                lru->delete_key(key);
+            if (lru->isExist(key)) {
+                lru->deleteKey(key);
             }
             return true;
         }
@@ -302,33 +302,33 @@ bool SkipDatabase<K, V>::del_func(std::vector<std::string>& commands) {
 
 // 查询全部
 template<typename K, typename V>
-bool SkipDatabase<K, V>::show_func(std::vector<std::string>& commands) {
+bool SkipDatabase<K, V>::showFunc(std::vector<std::string>& commands) {
         if (commands.size() != 2) return false;
         std::string s = commands[1];
         std::transform(s.begin(), s.end(), s.begin(), ::toupper);
         if (s == "ALL") {
-            skipList->display_list();
+            skipList->displayList();
             return true;
         }
         else if (s == "CAP") {
-            int skipdb_cap = skipList->size();
-            int expire_keys = lru->get_current_capacity();
-            std::cout << "The Skipdb keys' number is : " << skipdb_cap 
-                      << " , The expired_map keys' number is: " << expire_keys << std::endl;
+            int skipdbCap = skipList->size();
+            int expireKeys = lru->getCurrentCapacity();
+            std::cout << "The Skipdb keys' number is : " << skipdbCap 
+                      << " , The expired_map keys' number is: " << expireKeys << std::endl;
             return true;
         }
         return false;        
 }
 
 template<typename K, typename V>
-bool SkipDatabase<K, V>::dump_func(std::vector<std::string>& commands) {
+bool SkipDatabase<K, V>::dumpFunc(std::vector<std::string>& commands) {
     if (commands.size() != 1) return false;
-    return skipList->dump_file();
+    return skipList->dumpFile();
 }
 
 template<typename K, typename V>
-bool SkipDatabase<K, V>::close_func(std::vector<std::string>& commands) {
+bool SkipDatabase<K, V>::closeFunc(std::vector<std::string>& commands) {
     if (commands.size() != 1)   return false;
-    is_close = true;
+    isClose = true;
     return true;
 }

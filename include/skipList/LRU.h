@@ -5,7 +5,7 @@
 #include <iostream>
 #include<mutex>
 
-std::mutex lru_mtx;
+std::mutex lruMtx;
 
 // 双向链表节点
 template<typename K, typename V>
@@ -21,31 +21,31 @@ struct LinkNode {
         std::cout << "析构中..." << key << "->" << value << std::endl;
     }
 
-    bool is_expired() {
-        return value->is_expired();
+    bool isExpired() {
+        return value->isExpired();
     }
 };
 
 // LRU算法模板类
 template<typename K, typename V>
-class LRU_Cache {
+class LRUCache {
     typedef LinkNode<K, V> Node;
 public:
-    LRU_Cache(int);
-    ~LRU_Cache();
-    void set_key(const K, const V);
-    void delete_key(const K);
-    V get_value(const K);
-    K get_head_key() const {
+    LRUCache(int);
+    ~LRUCache();
+    void setKey(const K, const V);
+    void deleteKey(const K);
+    V getValue(const K);
+    K getHeadKey() const {
         return head->next->key;
     };
     void print() const;
-    bool is_exist(K);
-    bool is_expired(K);
-    int get_current_capacity();
+    bool isExist(K);
+    bool isExpired(K);
+    int getCurrentCapacity();
 private:
-    void remove_node(Node*);
-    void push_node(Node*);
+    void removeNode(Node*);
+    void pushNode(Node*);
 private:
     std::unordered_map<K, Node*> cache;
     int capacity;
@@ -55,7 +55,7 @@ private:
 
 // 构造函数
 template<typename K, typename V>
-LRU_Cache<K, V>::LRU_Cache(int cap) : capacity(cap) {
+LRUCache<K, V>::LRUCache(int cap) : capacity(cap) {
     head = new Node();
     tail = new Node();
     head->pre = nullptr;
@@ -66,7 +66,7 @@ LRU_Cache<K, V>::LRU_Cache(int cap) : capacity(cap) {
 
 // 析构函数
 template<typename K, typename V>
-LRU_Cache<K, V>::~LRU_Cache() {
+LRUCache<K, V>::~LRUCache() {
     if (head != nullptr) {
         delete head;
         head = nullptr;
@@ -85,106 +85,106 @@ LRU_Cache<K, V>::~LRU_Cache() {
 
 // 更新节点值
 template<typename K, typename V>
-void LRU_Cache<K, V>::set_key(const K _key, const V _val) {
-    lru_mtx.lock();
+void LRUCache<K, V>::setKey(const K _key, const V _val) {
+    lruMtx.lock();
     // 存在节点
     if (cache.find(_key) != cache.end()) {
         Node* node = cache[_key];
-        remove_node(node);
+        removeNode(node);
         node->value = _val;
-        push_node(node);
-        lru_mtx.unlock();
+        pushNode(node);
+        lruMtx.unlock();
         return;
     }
     // 不存在节点,则先检查节点数是否达到最大值
     if (cache.size() == this->capacity) {
         K top_key = head->next->key;
-        remove_node(head->next);
+        removeNode(head->next);
         Node* node = cache[top_key];
         delete node;
         node = nullptr;
         cache.erase(top_key);
     }
     Node* node = new Node(_key, _val);
-    push_node(node);
+    pushNode(node);
     cache[_key] = node;
-    lru_mtx.unlock();
+    lruMtx.unlock();
 }
 
 // 删除节点
 template<typename K, typename V>
-void LRU_Cache<K, V>::delete_key(const K key) {
-    lru_mtx.lock();
+void LRUCache<K, V>::deleteKey(const K key) {
+    lruMtx.lock();
     Node* node = cache[key];
-    remove_node(node);
+    removeNode(node);
     delete node;
     node = nullptr;
     cache.erase(key);
-    lru_mtx.unlock();
+    lruMtx.unlock();
 }
 
 // 取出节点值并更新顺序
 template<typename K, typename V>
-V LRU_Cache<K, V>::get_value(const K _key) {
-    lru_mtx.lock();
+V LRUCache<K, V>::getValue(const K _key) {
+    lruMtx.lock();
     if (cache.find(_key) != cache.end()) {
         Node* node = cache[_key];
-        remove_node(node);
-        push_node(node);
-        lru_mtx.unlock();
+        removeNode(node);
+        pushNode(node);
+        lruMtx.unlock();
         return node->value;
     }
-    lru_mtx.unlock();
+    lruMtx.unlock();
     return nullptr;
 }
 
 // 依此打印双向链表节点值
 template<typename K, typename V>
-void LRU_Cache<K, V>::print() const {
+void LRUCache<K, V>::print() const {
     if (this->head->next == this->tail) {
         std::cout << "empty\n";
         return;
     }
     Node* node = this->head->next;
     while (node != this->tail->pre) {
-        std::cout << node->value->get_value() << "->";
+        std::cout << node->value->getValue() << "->";
         node = node->next;
     }
-    std::cout << node->value->get_value() << std::endl;
+    std::cout << node->value->getValue() << std::endl;
 }
 
 // 检查是否存在节点
 template<typename K, typename V>
-bool LRU_Cache<K, V>::is_exist(K key) {
+bool LRUCache<K, V>::isExist(K key) {
     auto it = cache.find(key);
     return it != cache.end();
 }
 
 // 检查节点是否已经过期
 template<typename K, typename V>
-bool LRU_Cache<K, V>::is_expired(K key) {
-    if (is_exist(key)) {
-        return cache[key]->is_expired();
+bool LRUCache<K, V>::isExpired(K key) {
+    if (isExist(key)) {
+        return cache[key]->isExpired();
     }
     return false;
 }
 
 // 获得设置了过期时间的节点数量
 template<typename K, typename V>
-int LRU_Cache<K, V>::get_current_capacity() {
+int LRUCache<K, V>::getCurrentCapacity() {
     return cache.size();
 }
 
 // 删除链表中节点
 template<typename K, typename V>
-void LRU_Cache<K, V>::remove_node(Node* node) {
+void LRUCache<K, V>::removeNode(Node* node) {
     node->pre->next = node->next;
     node->next->pre = node->pre;
 }
 
 // 将节点加入双向链表末尾
 template<typename K, typename V>
-void LRU_Cache<K, V>::push_node(Node* node) {
+void LRUCache<K, V>::pushNode(Node* node) {
     tail->pre->next = node;
     node->pre = tail->pre;
     node->next = tail;
