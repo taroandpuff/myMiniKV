@@ -20,14 +20,11 @@ struct TreeNode {
     // 颜色
     bool color;
 
-    size_t size;
-
     TreeNode() = default;
-    TreeNode(K key, V data, bool color, size_t size) {
+    TreeNode(K key, V data, bool color) {
         this->data = data;
         this->color = color;
         this->key = key;
-        this->size = size;
     }
 };
 
@@ -146,8 +143,6 @@ TreeNode<K, V>* RedBlockTree<K, V>::rotateWithLeft(TreeNode<K, V>* k2) {
     k1->right = k2;
     k1->color = k2->color;
     k2->color = RED;
-    //k1->size = k2->size;
-    // k2->size = k2->left->size + k2->right->size + 1;
     return k1;
 }
 
@@ -160,7 +155,6 @@ TreeNode<K, V>* RedBlockTree<K, V>::rotateWithRight(TreeNode<K, V>* k1) {
     k2->left = k1;
     k2->color = k1->color;
     k1->color = RED;
-    //k1->size = k1->left->size + k1->right->size + 1;
     return k2;
 }
 
@@ -177,7 +171,7 @@ void RedBlockTree<K, V>::colorConversion(TreeNode<K, V>* node) {
 template<typename K, typename V>
 TreeNode<K, V>* RedBlockTree<K, V>::insert(TreeNode<K, V>* t, K key, V data) {
     if (t == nullptr) {
-        TreeNode<K, V>* tmp = new TreeNode<K, V>(key, data, RED, 1);
+        TreeNode<K, V>* tmp = new TreeNode<K, V>(key, data, RED);
         return tmp;
     }
 
@@ -201,7 +195,6 @@ TreeNode<K, V>* RedBlockTree<K, V>::balance(TreeNode<K, V>* t) {
     if (isRed(t->left) && isRed(t->left->left)) t = rotateWithLeft(t);
     // 两个子节点都是红色连接则颜色转换
     if (isRed(t->left) && isRed(t->right)) colorConversion(t);
-    //t->size = t->left->size + t->right->size + 1;
     return t;
 }
 

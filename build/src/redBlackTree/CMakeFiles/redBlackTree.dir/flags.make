@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/WorkSpace/myMiniKV/include -I/WorkSpace/myMiniKV/include/bPlusTree -I/WorkSpace/myMiniKV/include/redBlackTree -I/WorkSpace/myMiniKV/include/skipList
 
-CXX_FLAGS = -g
+CXX_FLAGS = -g -g
 

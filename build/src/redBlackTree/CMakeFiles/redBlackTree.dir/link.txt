@@ -1,1 +1,1 @@
-/usr/bin/g++ -g -rdynamic CMakeFiles/redBlackTree.dir/main.cpp.o -o ../../../bin/redBlackTree  -lpthread 
+/usr/bin/g++ -g -g -rdynamic CMakeFiles/redBlackTree.dir/main.cpp.o -o ../../../bin/redBlackTree  -lpthread 

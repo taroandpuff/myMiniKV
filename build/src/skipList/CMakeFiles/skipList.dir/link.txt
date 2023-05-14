@@ -1,1 +1,1 @@
-/usr/bin/g++ -g -rdynamic CMakeFiles/skipList.dir/main.cpp.o -o ../../../bin/skipList  -lpthread 
+/usr/bin/g++ -g -g -rdynamic CMakeFiles/skipList.dir/main.cpp.o -o ../../../bin/skipList  -lpthread 
