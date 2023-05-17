@@ -69,17 +69,17 @@ void runFrame() {
 }
 
 int main() {
-    runFrame();
-	// BPlusTree<int, int>* B = new BPlusTree<int, int>(3);
-    // std::vector<int> arr = {2, 4, 26, 26, 8, 66, 234, 5, 21, 3, 6, 53, 654, 9, 232, 1, 454, 10, 1231, 43, 23, 42};
-    // for (int i = 0; i < arr.size(); i++) {
-	// 	B->add(arr[i], i);
-	// 	B->showBTree();
-	// }
-	// std::cout << "--------------------------------------------" << std::endl;
-	// for (int i = arr.size() - 1; i >= 0; i--) {
-	// 	B->remove(arr[i]);
-	// 	B->showBTree();
-	// }
+    //runFrame();
+	BPlusTree<int, int>* B = new BPlusTree<int, int>(3);
+    std::vector<int> arr = {2, 4, 26, 26, 8, 66, 234, 5, 21, 3, 6, 53, 654, 9, 232, 1, 454, 10, 1231, 43, 23, 42};
+    for (int i = 0; i < arr.size(); i++) {
+		B->add(arr[i], i);
+		B->showBTree();
+	}
+	std::cout << "--------------------------------------------" << std::endl;
+	for (int i = arr.size() - 1; i >= 0; i--) {
+		B->remove(arr[i]);
+		B->showBTree();
+	}
 	return 0;
 }
